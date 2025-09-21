@@ -2,25 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Zodiac Slots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="slot-container">
-    <h2>✨ Zodiac Slots</h2>
-    <div id="reels">
-      <div class="reel" id="reel1"></div>
-      <div class="reel" id="reel2"></div>
-      <div class="reel" id="reel3"></div>
+  <div class="wrapper">
+    <div class="cabinet-glow"></div>
+
+    <h1 class="title">Zodiac Slots</h1>
+
+    <div class="machine">
+      <div id="reels" class="reels">
+        <!-- each reel is a vertical “strip” we animate; we’ll populate with symbols in JS -->
+        <div class="reel" id="reel1"><div class="strip"></div></div>
+        <div class="reel" id="reel2"><div class="strip"></div></div>
+        <div class="reel" id="reel3"><div class="strip"></div></div>
+      </div>
+
+      <div class="panel">
+        <div class="bet-ctrl">
+          <button class="btn ghost" id="minus">−</button>
+          <span id="betLabel">Bet: 10</span>
+          <button class="btn ghost" id="plus">+</button>
+        </div>
+        <button class="btn spin" id="spinBtn">🎰 SPIN</button>
+      </div>
+
+      <p id="result"></p>
     </div>
-    <div class="bet-row">
-      <button id="minus">−</button>
-      <span id="betLabel">Bet: 10</span>
-      <button id="plus">+</button>
+  </div>
+
+  <!-- JACKPOT overlay -->
+  <div id="jackpotOverlay" class="overlay hidden">
+    <div class="burst">
+      <div class="ring"></div>
+      <div class="spokes"></div>
+      <div class="spokes s2"></div>
     </div>
-    <button id="spinBtn">🎰 SPIN</button>
-    <p id="result"></p>
+    <div class="jackpot-text">JACKPOT!</div>
   </div>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
