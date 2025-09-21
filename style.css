@@ -1,51 +1,117 @@
+/* ---------- base + backdrop ---------- */
 * { box-sizing: border-box; }
+html, body { height: 100%; }
 body {
-  background: radial-gradient(circle at top, #0a0f29 0%, #000 70%);
-  color: #fff;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  text-align: center;
-  height: 100vh;
   margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: #eaf8ff;
+  font-family: 'Orbitron', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: radial-gradient(1200px 600px at 50% -10%, #1b1c3a 0%, #090b12 55%, #020308 100%);
+  overflow: hidden;
 }
-.slot-container {
-  background: rgba(255,255,255,0.05);
-  border: 2px solid #ff7a00;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 0 24px #ff7a00;
-  width: 340px;
+body::before {
+  content:"";
+  position: fixed; inset: -20% -20% -20% -20%;
+  background:
+    radial-gradient(600px 300px at 15% 20%, rgba(255,140,0,.18), transparent 60%),
+    radial-gradient(700px 380px at 85% 10%, rgba(0,180,255,.15), transparent 60%),
+    radial-gradient(900px 500px at 50% 110%, rgba(255,30,0,.16), transparent 60%);
+  filter: blur(20px);
+  animation: drift 20s linear infinite alternate;
+  z-index: 0;
 }
-#reels {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  font-size: 48px;
-  margin: 10px 0 16px;
+@keyframes drift { to { transform: translateY(-20px) translateX(10px); } }
+.wrapper { position: relative; display: grid; place-items: center; height: 100%; z-index: 1; }
+.title { margin: 8px 0 12px; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 10px #ff7a00, 0 0 24px #ff3d00; }
+.cabinet-glow {
+  position: absolute; width: min(92vw, 520px); height: 430px; border-radius: 24px;
+  box-shadow: 0 0 40px 10px rgba(255,122,0,.35), inset 0 0 60px rgba(255,170,0,.16);
+  border: 2px solid rgba(255,122,0,.55); top: 50%; left: 50%; transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 18px rgba(255,122,0,.3));
+}
+
+/* ---------- machine ---------- */
+.machine {
+  width: min(90vw, 500px);
+  background: linear-gradient(180deg, rgba(20,20,30,.6), rgba(8,8,16,.6));
+  border: 2px solid rgba(255,122,0,.7);
+  border-radius: 22px;
+  box-shadow: 0 0 32px rgba(255,122,0,.35), inset 0 0 24px rgba(255,170,0,.12);
+  padding: 18px;
+}
+.reels {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 6px 0 16px;
 }
 .reel {
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #ff7a00;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.08);
-  user-select: none;
+  position: relative; height: 110px; overflow: hidden; border-radius: 14px;
+  border: 2px solid rgba(255,170,0,.9);
+  background: radial-gradient(circle at 50% 30%, rgba(255,255,255,.08), rgba(0,0,0,.25));
+  box-shadow: inset 0 0 14px rgba(0,0,0,.5), 0 0 16px rgba(0,200,255,.25), 0 0 26px rgba(255,122,0,.45);
 }
-.bet-row {
-  display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 10px;
+.strip {
+  position: absolute; top: 0; left: 0; right: 0;
+  display: grid; row-gap: 8px; justify-items: center; padding: 8px 0;
+  font-size: 56px; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,.4), 0 0 16px rgba(255,140,0,.5);
 }
-button {
-  background: #ff7a00;
-  color: #000;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 10px;
-  cursor: pointer;
+.symbol { height: 90px; display: grid; place-items: center; }
+
+/* spin (translateY) is done inline via JS, but we keep blur pulse */
+.reel.spin .strip { filter: blur(2px); }
+.reel.stop .strip { filter: blur(0); transition: filter .2s ease; }
+
+.panel { display: grid; gap: 12px; justify-items: center; }
+.bet-ctrl {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,170,0,.5);
+  border-radius: 12px; padding: 6px 10px; text-shadow: 0 0 8px rgba(255,170,0,.5);
 }
-button:hover { background: #ffb347; }
-#result { min-height: 24px; margin-top: 8px; }
+.btn { cursor: pointer; border: none; border-radius: 12px; padding: 10px 18px; font-family: inherit; letter-spacing: .5px; }
+.btn.ghost { background: rgba(255,122,0,.15); color: #ffd19c; border: 1px solid rgba(255,170,0,.7); box-shadow: 0 0 10px rgba(255,170,0,.35) inset; }
+.btn.spin {
+  width: 100%; background: radial-gradient(100% 120% at 50% 0%, #ffd27a 0%, #ff9b00 50%, #ff5900 100%);
+  color: #1a0b00; font-weight: 700; font-size: 18px;
+  box-shadow: 0 0 22px rgba(255,100,0,.55), 0 0 44px rgba(255,80,0,.35); border: 2px solid rgba(255,130,0,.9);
+  text-transform: uppercase;
+}
+.btn.spin:active { transform: translateY(1px); }
+#result { min-height: 28px; margin: 8px 0 0; text-align: center; color: #a9eaff; text-shadow: 0 0 10px rgba(0,200,255,.45); }
+
+/* ---------- jackpot overlay ---------- */
+.overlay {
+  position: fixed; inset: 0; display: grid; place-items: center; pointer-events: none; z-index: 5;
+  background: radial-gradient(400px 200px at 50% 40%, rgba(255,120,0,.08), transparent 70%);
+}
+.hidden { opacity: 0; transform: scale(0.96); transition: opacity .25s ease, transform .25s ease; }
+.overlay.show { opacity: 1; transform: scale(1); transition: opacity .25s ease, transform .25s ease; }
+
+.burst { position: relative; width: 320px; height: 320px; }
+.ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  box-shadow: 0 0 30px 10px rgba(255,160,0,.6) inset, 0 0 40px rgba(255,120,0,.6);
+  border: 3px solid rgba(255,160,0,.8);
+  animation: ringPulse 1200ms ease-out forwards;
+}
+@keyframes ringPulse {
+  0% { transform: scale(.4); opacity: .2; }
+  60% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: .9; }
+}
+.spokes, .spokes::before, .spokes::after {
+  position: absolute; inset: 0; border-radius: 50%;
+  background:
+    conic-gradient(from 0deg, rgba(255,210,0,.0) 0 10deg, rgba(255,200,0,.9) 10deg 12deg, rgba(255,80,0,.0) 12deg 24deg,
+                   rgba(0,210,255,.85) 24deg 26deg, rgba(0,0,0,0) 26deg 36deg);
+  -webkit-mask: radial-gradient(circle, transparent 54%, #000 54.5%);
+          mask: radial-gradient(circle, transparent 54%, #000 54.5%);
+  animation: spin 1000ms linear infinite;
+}
+.spokes.s2 { animation-duration: 1600ms; transform: rotate(12deg); opacity: .75; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.jackpot-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  font-size: clamp(42px, 9vw, 64px); font-weight: 800; letter-spacing: 4px;
+  color: #ffe9b3; text-shadow: 0 0 12px #ffb400, 0 0 28px #ff5a00, 0 0 44px rgba(255,80,0,.9);
+  -webkit-text-stroke: 2px rgba(255,120,0,.9);
+  animation: shout .9s ease-out 1 forwards;
+}
+@keyframes shout { 0% { transform: translate(-50%,-50%) scale(.6); opacity:.2 } 100% { transform: translate(-50%,-50%) scale(1); opacity:1 } }
